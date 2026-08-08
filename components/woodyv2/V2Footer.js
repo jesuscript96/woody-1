@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { v2Footer } from "@/lib/woody-v2-content";
 
-function Icon({ name }) {
+export function SocialIcon({ name }) {
   if (name === "instagram") {
     return (
       <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
@@ -23,61 +23,82 @@ function Icon({ name }) {
   return null;
 }
 
-// Shared footer — bottom of every page and inside the menu overlay.
-// `inOverlay` drops the background (the overlay is already burgundy) and pins it
-// to the bottom of the overlay.
-export default function V2Footer({ inOverlay = false }) {
+// Site-wide footer. A single burgundy bar that spreads across the whole width so
+// the block of dark red is broken up: big "bar woody" wordmark left, a playful
+// "schuif aan" sign over the info columns, and the two social links rendered as
+// Woody woodpecker-emblems (the "big W"s = WhatsApp + Instagram). The floating
+// "boek tafel" button lands in the reserved bottom-right corner.
+export default function V2Footer() {
   const [lang, setLang] = useState("nl");
   const { contact, openingstijden, adres, socials } = v2Footer;
 
+  // split "street, city" so the address reads over two lines like the sketch
+  const [addrStreet, ...addrRest] = adres.line.split(",");
+  const addrCity = addrRest.join(",").trim();
+
   return (
-    <footer className={`v2-footer${inOverlay ? " v2-footer--overlay" : ""}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="v2-footer__mark" src="/gfx/logo-beige.svg" alt="Woody" />
-      <div className="v2-footer__lang">
-        <button
-          className={lang === "nl" ? "is-on" : ""}
-          onClick={() => setLang("nl")}
-        >
-          NL
-        </button>
-        <span>/</span>
-        <button
-          className={lang === "eng" ? "is-on" : ""}
-          onClick={() => setLang("eng")}
-        >
-          ENG
-        </button>
+    <footer className="v2-footer">
+      {/* eslint-disable @next/next/no-img-element */}
+      <a className="v2-footer__logo" href="/" aria-label="Bar Woody — home">
+        <img src="/gfx/logo-beige.svg" alt="Bar Woody" />
+      </a>
+
+      <div className="v2-footer__mid">
+        <img className="v2-footer__schuif" src="/gfx/word-schuifaan-beige.png" alt="Schuif aan" />
+
+        <div className="v2-footer__cols">
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Contact</span>
+            <a href={`tel:${contact.phone.replace(/[^+\d]/g, "")}`}>{contact.phone}</a>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </div>
+
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Adres</span>
+            <p>{addrStreet.trim()}</p>
+            {addrCity && <p>{addrCity}</p>}
+            <a href={adres.routeHref} target="_blank" rel="noreferrer">
+              Route
+            </a>
+          </div>
+
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Openingstijden</span>
+            <p>{openingstijden}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="v2-footer__cols">
-        <div className="v2-footer__col">
-          <span className="v2-footer__label">Contact</span>
-          <a href={`tel:${contact.phone.replace(/[^+\d]/g, "")}`}>{contact.phone}</a>
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        </div>
-
-        <div className="v2-footer__col">
-          <span className="v2-footer__label">Openingstijden</span>
-          <p>{openingstijden}</p>
-        </div>
-
-        <div className="v2-footer__col">
-          <span className="v2-footer__label">Adres</span>
-          <p>{adres.line}</p>
-          <a href={adres.routeHref} target="_blank" rel="noreferrer">
-            Route
-          </a>
+      <div className="v2-footer__right">
+        <div className="v2-footer__lang">
+          <button className={lang === "nl" ? "is-on" : ""} onClick={() => setLang("nl")}>
+            NL
+          </button>
+          <span>/</span>
+          <button className={lang === "eng" ? "is-on" : ""} onClick={() => setLang("eng")}>
+            ENG
+          </button>
         </div>
 
         <div className="v2-footer__socials">
           {socials.map((s) => (
-            <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}>
-              <Icon name={s.icon} />
+            <a
+              key={s.label}
+              className="v2-footer__social"
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={s.label}
+            >
+              <img className="v2-footer__social-mark" src="/gfx/beeldmerk1-beige.svg" alt="" />
+              <span className="v2-footer__social-badge">
+                <SocialIcon name={s.icon} />
+              </span>
             </a>
           ))}
         </div>
       </div>
+      {/* eslint-enable @next/next/no-img-element */}
     </footer>
   );
 }

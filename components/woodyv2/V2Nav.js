@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { v2NavLinks, v2Brand } from "@/lib/woody-v2-content";
-import V2Footer from "@/components/woodyv2/V2Footer";
+import { v2NavLinks, v2Brand, v2Book, v2Footer } from "@/lib/woody-v2-content";
 
 // Sticky nav-menu: fixed logo (left) + hamburger (right); the hamburger opens a
 // full-screen burgundy overlay with big Exposure links + the shared footer.
@@ -66,20 +65,88 @@ export default function V2Nav({ solid = false, overlay = false }) {
       </header>
 
       <div className={`v2-overlay${open ? " is-open" : ""}`} aria-hidden={!open}>
+        {/* eslint-disable @next/next/no-img-element */}
+
+        {/* top-left woodpecker emblem (the "bar woody" wordmark sits centred in
+            the bar above; the X lives top-right) */}
+        <img
+          className="v2-overlay__brandmark"
+          src="/gfx/beeldmerk1-beige.svg"
+          alt=""
+          aria-hidden="true"
+        />
+
+        {/* small teal club-suit accent */}
+        <span className="v2-overlay__club" aria-hidden="true" />
+
         <nav className="v2-overlay__links">
           {v2NavLinks.map((l, i) => (
             <a
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              style={{ transitionDelay: `${0.08 + i * 0.06}s` }}
+              style={{ transitionDelay: `${0.08 + i * 0.05}s` }}
             >
               {l.label}
             </a>
           ))}
         </nav>
 
-        <V2Footer inOverlay />
+        {/* flikkering "reserveren" sign */}
+        <a
+          className="v2-flikker"
+          href={v2Book.href}
+          onClick={() => setOpen(false)}
+          aria-label={v2Book.label}
+        >
+          <img
+            className="v2-flikker__word"
+            src="/gfx/word-reserveren-beige.png"
+            alt=""
+            aria-hidden="true"
+          />
+        </a>
+
+        {/* flickering editorial photo collage (two frames swap) */}
+        <div className="v2-overlay__collage" aria-hidden="true">
+          <img className="v2-collage__frame is-a" src="/full-size-menu/collage-1.jpg" alt="" />
+          <img className="v2-collage__frame is-b" src="/full-size-menu/collage-2.jpg" alt="" />
+        </div>
+
+        {/* footer info lives in the left space (the collage owns the right).
+            The reference's four marks were the *positions* of these blocks. */}
+        <div className="v2-overlay__foot">
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Contact</span>
+            <a href={`tel:${v2Footer.contact.phone.replace(/[^+\d]/g, "")}`}>
+              {v2Footer.contact.phone}
+            </a>
+            <a href={`mailto:${v2Footer.contact.email}`}>{v2Footer.contact.email}</a>
+          </div>
+
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Adres</span>
+            {(() => {
+              const [street, ...rest] = v2Footer.adres.line.split(",");
+              const city = rest.join(",").trim();
+              return (
+                <>
+                  <p>{street.trim()}</p>
+                  {city && <p>{city}</p>}
+                </>
+              );
+            })()}
+            <a href={v2Footer.adres.routeHref} target="_blank" rel="noreferrer">
+              Route
+            </a>
+          </div>
+
+          <div className="v2-footer__col">
+            <span className="v2-footer__label">Openingstijden</span>
+            <p>{v2Footer.openingstijden}</p>
+          </div>
+        </div>
+        {/* eslint-enable @next/next/no-img-element */}
       </div>
     </>
   );
