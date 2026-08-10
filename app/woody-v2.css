@@ -640,6 +640,8 @@
   background-position: center;
 }
 
+/* desktop-only photo layouts (mobile gets its own edge-hugging column below) */
+@media (min-width: 901px) {
 /* over — cover: one big photo flush to the top & right edges, full height */
 .v2 .v2-ed__photos--cover .v2-ed__tile:nth-child(1) {
   top: 0;
@@ -719,6 +721,7 @@
 .v2 .v2-ed__photos--float-one .v2-ed__tile:nth-child(n + 2) {
   display: none;
 }
+} /* end desktop-only photo layouts */
 
 @media (max-width: 900px) {
   .v2 .v2-ed {
@@ -729,14 +732,16 @@
     max-width: none;
     padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 32px) 8vh;
   }
+  /* photos: full-bleed column of edge-hugging portraits. No side padding so each
+     photo touches the left or right screen edge; they alternate sides. */
   .v2 .v2-ed__photos {
     position: static;
     height: auto;
     overflow: visible;
-    padding: 0 clamp(20px, 5vw, 32px) 14vh;
+    padding: 0 0 14vh;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
   }
   .v2 .v2-ed__photos::before {
     display: none;
@@ -748,11 +753,25 @@
     right: auto;
     left: auto;
     bottom: auto;
-    width: 100%;
+    margin: 0;
+    width: 78%;
     height: auto;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 5;
     border-radius: 3px;
     box-shadow: 0 14px 34px rgba(109, 21, 15, 0.2);
+    display: block;
+  }
+  /* alternate the edge each photo touches: odd → left, even → right */
+  .v2 .v2-ed__photos .v2-ed__tile:nth-child(odd) {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .v2 .v2-ed__photos .v2-ed__tile:nth-child(even) {
+    margin-left: auto;
+    margin-right: 0;
+  }
+  /* reveal at least 2 photos (desktop hides extras on some layouts) */
+  .v2 .v2-ed__photos .v2-ed__tile:nth-child(n + 2) {
     display: block;
   }
 }
