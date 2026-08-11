@@ -676,9 +676,9 @@ body.has-woo-cursor * {
     top: 24px;
     transform: translateX(-50%);
   }
-  /* home hero + closing image: short 40vh fields on mobile */
+  /* home hero: 60vh on mobile · closing image: short 40vh field */
   .hero {
-    height: 40vh;
+    height: 60vh;
     min-height: 0;
   }
   .closing {
