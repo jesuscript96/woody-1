@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { closing, brand } from "@/lib/content";
+import { closing } from "@/lib/content";
 import Woord from "@/components/woodyv2/Woord";
 
 // Colours the banner border + text cycle through, every 300ms.
@@ -45,7 +45,7 @@ export default function ClosingBanner({ dancing = false, colors = DEFAULT_COLORS
         </div>
         <a
           className="closing__banner"
-          href={`mailto:${brand.email}`}
+          href="#gstpln_openBookingWidget"
           aria-label={closing.bannerLabel}
         >
           {/* the designed word, filled with the cycling banner colour (mask) */}
