@@ -5,6 +5,28 @@ import { showcase } from "@/lib/content";
 import DancingText from "@/components/DancingText";
 import Woord from "@/components/woodyv2/Woord";
 
+// Mobile-only decorative scatter of the 4 card-suit icons (light/beige only —
+// the dark/rood ones don't contrast). Spread pseudo-randomly across the showcase
+// and seeded so server & client render identical positions (no hydration drift).
+const ICON_SUITS = ["harten", "klaveren", "ruiten", "schoppen"];
+const ICON_SCATTER = (() => {
+  let s = 9281;
+  const rnd = () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+  return Array.from({ length: 108 }, () => {
+    const suit = ICON_SUITS[Math.floor(rnd() * 4)];
+    return {
+      src: `/Graphics/Iconen PNGs/Woody_${suit}-beige.png`,
+      top: +(rnd() * 94).toFixed(2),
+      left: +(rnd() * 90).toFixed(2),
+      size: 14 + Math.floor(rnd() * 14), // 14–28px
+      rot: Math.floor(rnd() * 360),
+    };
+  });
+})();
+
 export default function ParallaxShowcase({ dancing = false }) {
   const rootRef = useRef(null);
 
@@ -122,6 +144,24 @@ export default function ParallaxShowcase({ dancing = false }) {
           </div>
         </article>
       ))}
+
+      {/* decorative icon scatter — sits between the photos (z1-2) and the lockup
+          titles (z6). Mobile-only (hidden on desktop via CSS). */}
+      <div className="showcase__icons" aria-hidden="true">
+        {ICON_SCATTER.map((ic, i) => (
+          <img
+            key={i}
+            src={ic.src}
+            alt=""
+            style={{
+              top: `${ic.top}%`,
+              left: `${ic.left}%`,
+              width: `${ic.size}px`,
+              transform: `rotate(${ic.rot}deg)`,
+            }}
+          />
+        ))}
+      </div>
     </section>
   );
 }

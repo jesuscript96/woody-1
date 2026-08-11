@@ -416,6 +416,21 @@ body.has-woo-cursor * {
   margin-top: 0.6em;
 }
 
+/* decorative icon scatter — mobile only. Sits above the photos (z1-2) and below
+   the lockup titles (z6). Hidden on desktop. */
+.showcase__icons {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: none;
+}
+.showcase__icons img {
+  position: absolute;
+  height: auto;
+  opacity: 0.9;
+}
+
 /* ------------------------------------------------------------------ info */
 .info {
   background: var(--cream);
@@ -660,6 +675,22 @@ body.has-woo-cursor * {
     left: 50%;
     top: 24px;
     transform: translateX(-50%);
+  }
+  /* home hero + closing image: short 40vh fields on mobile */
+  .hero {
+    height: 40vh;
+    min-height: 0;
+  }
+  .closing {
+    min-height: 40vh;
+    height: 40vh;
+  }
+  /* showcase: keep titles, drop the body captions, show the icon scatter */
+  .triplet__caption {
+    display: none;
+  }
+  .showcase__icons {
+    display: block;
   }
   .triplet {
     min-height: 92vh;
