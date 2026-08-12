@@ -194,18 +194,19 @@
   }
 }
 
-/* --------------------------------------------------- full-screen overlay */
+/* --------------------------------------------------- full-screen overlay
+   Full-size menu (ref: public/full-size-menu). Nav links pinned left, a
+   flikkering "reserveren" sign floating centre, a 2-frame editorial photo
+   collage right, and a row of woodpecker emblems bottom-left. Everything is
+   absolutely placed for the wide layout; the mobile query below re-flows it
+   into a single centred column. */
 .v2 .v2-overlay {
   position: fixed;
   inset: 0;
   z-index: 55;
   background: var(--woody-red);
   color: var(--woody-cream);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 17vh clamp(30px, 9vw, 150px) 7vh;
-  overflow-y: auto;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-1.5%);
@@ -217,18 +218,53 @@
   transform: none;
 }
 
+/* top-left woodpecker emblem */
+.v2 .v2-overlay__brandmark {
+  position: absolute;
+  top: clamp(16px, 2.2vh, 30px);
+  left: clamp(20px, 3vw, 44px);
+  width: clamp(40px, 3.4vw, 54px);
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.15s;
+}
+.v2 .v2-overlay.is-open .v2-overlay__brandmark {
+  opacity: 1;
+}
+
+/* small teal club-suit accent (klaveren mask, tinted mint) */
+.v2 .v2-overlay__club {
+  position: absolute;
+  left: 24%;
+  top: 15.5%;
+  width: clamp(20px, 2vw, 34px);
+  height: clamp(23px, 2.3vw, 39px);
+  background: var(--woody-teal);
+  -webkit-mask: url(/gfx/klaveren-beige.png) center / contain no-repeat;
+  mask: url(/gfx/klaveren-beige.png) center / contain no-repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.25s;
+}
+.v2 .v2-overlay.is-open .v2-overlay__club {
+  opacity: 1;
+}
+
+/* nav links — left column, vertically centred */
 .v2 .v2-overlay__links {
+  position: absolute;
+  left: clamp(30px, 6vw, 110px);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.8vh, 22px);
-  margin: clamp(16px, 4vh, 48px) 0;
+  gap: clamp(6px, 1vh, 16px);
 }
 .v2 .v2-overlay__links a {
   width: fit-content;
   font-family: var(--font-woody-display), cursive;
-  font-size: clamp(1.3rem, 3.6vw, 2.8rem); /* ~30% smaller than before */
-  line-height: 1.18; /* room for the puffy descenders/ascenders */
-  padding: 0.04em 0;
+  font-size: clamp(1.5rem, 4vw, 3.1rem);
+  line-height: 1.12; /* room for the puffy descenders/ascenders */
+  padding: 0.02em 0;
   text-transform: lowercase;
   text-decoration: none; /* kill the stray underline on hover */
   color: var(--woody-cream);
@@ -244,71 +280,192 @@
   color: var(--woody-yellow);
 }
 
-/* footer of the overlay: three columns on the same burgundy background */
-.v2 .v2-overlay__foot {
-  margin-top: auto;
-  padding-top: clamp(36px, 6vh, 72px);
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: clamp(24px, 4vw, 60px);
-  align-items: start;
-  font-family: var(--font-woody-cond), sans-serif;
+/* -------------------------------------------- flikkering "reserveren" sign */
+.v2 .v2-flikker {
+  position: absolute;
+  left: 47.5%;
+  top: 29%;
+  z-index: 3; /* rides over the collage where they overlap */
+  width: clamp(260px, 38vw, 560px);
+  transform: translate(-50%, -50%) rotate(-6.5deg);
+  padding: clamp(12px, 1.7vw, 26px) clamp(24px, 3vw, 46px);
+  background: var(--woody-red); /* opaque, so it masks the collage behind it */
+  border: clamp(3px, 0.4vw, 6px) solid var(--woody-cream);
+  border-radius: clamp(12px, 1.4vw, 20px);
+  box-shadow: 0 0 24px rgba(242, 192, 13, 0.22), 0 12px 34px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.45s ease 0.25s, transform 0.25s ease;
 }
-.v2 .v2-overlay__col-label {
+.v2 .v2-overlay.is-open .v2-flikker {
+  opacity: 1;
+  animation: v2Flikker 5s linear 0.7s infinite;
+}
+.v2 .v2-flikker:hover {
+  transform: translate(-50%, -50%) rotate(-6.5deg) scale(1.03);
+}
+.v2 .v2-flikker__word {
   display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 12px;
-  opacity: 0.6;
-  margin-bottom: 14px;
+  width: 100%;
+  height: auto;
 }
-.v2 .v2-overlay__mail {
-  color: var(--woody-yellow);
-  font-size: clamp(16px, 1.6vw, 20px);
+/* broken-neon flicker: mostly lit, with a few quick dropouts */
+@keyframes v2Flikker {
+  0%, 8%, 10%, 12%, 42%, 44%, 73%, 75%, 77%, 100% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0.32;
+  }
+  11% {
+    opacity: 0.5;
+  }
+  43% {
+    opacity: 0.28;
+  }
+  74% {
+    opacity: 0.55;
+  }
+  76% {
+    opacity: 0.34;
+  }
 }
-.v2 .v2-overlay__socials {
+
+/* ------------------------------------------ flickering editorial collage */
+.v2 .v2-overlay__collage {
+  position: absolute;
+  right: clamp(24px, 6vw, 96px);
+  top: clamp(80px, 10vh, 110px);
+  bottom: clamp(56px, 10vh, 96px);
+  width: clamp(280px, 36vw, 560px);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+}
+.v2 .v2-overlay.is-open .v2-overlay__collage {
+  opacity: 1;
+  transform: none;
+}
+.v2 .v2-collage__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.v2 .v2-collage__frame.is-b {
+  animation: v2CollageSwap 3.2s ease-in-out infinite;
+}
+@keyframes v2CollageSwap {
+  0%, 46% {
+    opacity: 0;
+  }
+  50%, 96% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------ footer info block (left space only) */
+/* Reuses the site footer's column + social styles; only the wrapper differs.
+   Pinned bottom-left so it stays clear of the right-side collage. */
+.v2 .v2-overlay__foot {
+  position: absolute;
+  left: clamp(30px, 6vw, 110px);
+  bottom: clamp(24px, 6vh, 56px);
+  max-width: min(52%, 720px);
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 15px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: clamp(18px, 2.6vw, 44px);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
 }
-.v2 .v2-overlay__socials a:hover {
-  color: var(--woody-yellow);
-}
-.v2 .v2-overlay__locs {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 12px;
-  font-size: 13px;
-  line-height: 1.4;
-  opacity: 0.85;
-}
-.v2 .v2-overlay__locs li {
-  display: flex;
-  flex-direction: column;
-}
-.v2 .v2-overlay__locs strong {
-  font-size: 15px;
+.v2 .v2-overlay.is-open .v2-overlay__foot {
   opacity: 1;
 }
 
+/* respect reduced-motion: no neon flicker, no frame-swap */
+@media (prefers-reduced-motion: reduce) {
+  .v2 .v2-overlay.is-open .v2-flikker {
+    animation: none;
+  }
+  .v2 .v2-collage__frame.is-b {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* overlay re-flow for narrow screens: single centred column, no collage */
+@media (max-width: 900px) {
+  .v2 .v2-overlay {
+    overflow-y: auto;
+  }
+  .v2 .v2-overlay__brandmark,
+  .v2 .v2-overlay__club,
+  .v2 .v2-overlay__collage {
+    display: none;
+  }
+  .v2 .v2-overlay__links {
+    position: static;
+    transform: none;
+    padding: clamp(92px, 16vh, 150px) clamp(24px, 8vw, 60px) 0;
+    gap: 8px;
+  }
+  .v2 .v2-overlay__links a {
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+  .v2 .v2-flikker {
+    position: static;
+    display: block;
+    transform: rotate(-4deg);
+    width: min(82%, 420px);
+    margin: clamp(30px, 6vh, 56px) auto 0;
+  }
+  .v2 .v2-flikker:hover {
+    transform: rotate(-4deg) scale(1.03);
+  }
+  .v2 .v2-overlay__foot {
+    position: static;
+    max-width: none;
+    justify-content: center;
+    gap: clamp(22px, 7vw, 44px);
+    padding: clamp(34px, 7vh, 60px) 0 clamp(28px, 6vh, 48px);
+    text-align: center;
+  }
+  .v2 .v2-overlay__foot .v2-footer__col {
+    align-items: center;
+  }
+}
+
 /* -------------------------------------- floating card-suit "Boek tafel" button */
+/* Size + inset live in vars so the footer can reserve exactly this corner. */
+.v2 {
+  --book-inset: clamp(16px, 2.6vw, 40px);
+  --book-w: clamp(124px, 13.8vw, 188px);
+  --book-h: clamp(138px, 15.4vw, 210px);
+}
 .v2 .v2-book {
   position: fixed;
   z-index: 50; /* under the overlay (55) so it hides when the menu opens */
-  right: clamp(14px, 2.4vw, 34px);
-  bottom: clamp(14px, 2.4vw, 34px);
-  width: clamp(104px, 12vw, 158px);
-  height: clamp(116px, 13.5vw, 178px);
+  right: var(--book-inset);
+  bottom: var(--book-inset);
+  width: var(--book-w);
+  height: var(--book-h);
   display: grid;
   place-items: center;
   transform: rotate(-9deg);
-  transition: transform 0.25s ease;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* pop in bigger on every page-enter, then settle — pulls the eye to the CTA */
+  animation: v2BookPop 0.85s cubic-bezier(0.22, 1.5, 0.4, 1) 0.2s backwards;
 }
 .v2 .v2-book:hover {
-  transform: rotate(-9deg) scale(1.06);
+  transform: rotate(-9deg) scale(1.08);
 }
 .v2 .v2-book__shape {
   position: absolute;
@@ -320,28 +477,32 @@
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
-  filter: drop-shadow(0 12px 24px rgba(109, 21, 15, 0.32));
-  animation: v2BookMorph 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 14px 28px rgba(109, 21, 15, 0.38));
 }
 .v2 .v2-book__label {
   position: relative;
   z-index: 1;
   font-family: var(--font-woody-display), cursive;
   color: var(--woody-red);
-  font-size: clamp(19px, 2.1vw, 30px);
+  font-size: clamp(21px, 2.4vw, 34px);
   line-height: 0.94;
   text-align: center;
   text-transform: lowercase;
   pointer-events: none;
 }
-@keyframes v2BookMorph {
-  from {
+/* entrance pop: hidden → overshoot big → settle (keeps the -9° tilt throughout) */
+@keyframes v2BookPop {
+  0% {
     opacity: 0;
-    transform: scale(0.6) rotate(-24deg);
+    transform: rotate(-9deg) scale(0.2);
   }
-  to {
+  55% {
     opacity: 1;
-    transform: none;
+    transform: rotate(-9deg) scale(1.32);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-9deg) scale(1);
   }
 }
 @keyframes v2spin {
@@ -350,8 +511,19 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .v2 .v2-book__shape {
+  .v2 .v2-book {
     animation: none;
+  }
+}
+/* on phones the card-suit CTA must not swallow the reading column, so shrink it */
+@media (max-width: 640px) {
+  .v2 {
+    --book-inset: 12px;
+    --book-w: 88px;
+    --book-h: 98px;
+  }
+  .v2 .v2-book__label {
+    font-size: 15px;
   }
 }
 
@@ -496,13 +668,6 @@
   }
   .v2 .v2-info__locs {
     grid-template-columns: 1fr;
-  }
-  .v2 .v2-overlay__links a {
-    font-size: clamp(1.2rem, 5.6vw, 2rem); /* ~30% smaller than before */
-  }
-  .v2 .v2-overlay__foot {
-    grid-template-columns: 1fr;
-    gap: 28px;
   }
 }
 
@@ -1233,53 +1398,56 @@
   }
 }
 
-/* ==================================================================== footer */
+/* ==================================================================== footer
+   One burgundy bar that uses the full width so the big block of dark red is
+   broken up: wordmark left · "schuif aan" sign + info columns middle · language
+   toggle over the two emblem-socials right. The floating "boek tafel" button
+   lands in the reserved bottom-right corner (via the --book-* vars). */
 .v2 .v2-footer {
-  background: var(--woody-red);
-  color: var(--woody-cream);
-  padding: clamp(40px, 7vh, 80px) clamp(20px, 5vw, 84px) clamp(30px, 5vh, 56px);
-}
-/* keep the bottom-right corner clear for the floating BOEK TAFEL button */
-.v2 .v2-footer:not(.v2-footer--overlay) {
-  padding-right: clamp(24px, 4vw, 200px);
-}
-/* inside the menu overlay: no own background, pinned to the bottom */
-.v2 .v2-footer--overlay {
-  background: transparent;
-  margin-top: auto;
-  padding: clamp(36px, 6vh, 64px) 0 0;
-}
-.v2 .v2-footer__lang {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: clamp(20px, 3vh, 32px);
-  font-family: var(--font-woody-cond), sans-serif;
-}
-.v2 .v2-footer__lang button {
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
+  gap: clamp(22px, 3.6vw, 68px);
+  background: var(--woody-red);
   color: var(--woody-cream);
-  font-family: var(--font-woody-display), cursive;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 22px;
-  opacity: 0.55;
+  padding: clamp(30px, 5vh, 62px) clamp(20px, 5vw, 84px);
+  /* reserve exactly the floating button's footprint on the right */
+  padding-right: calc(var(--book-inset) + var(--book-w) + clamp(18px, 2vw, 44px));
 }
-.v2 .v2-footer__lang button.is-on {
-  opacity: 1;
-  color: var(--woody-yellow);
+
+/* big wordmark, left */
+.v2 .v2-footer__logo {
+  flex: none;
+  line-height: 0;
 }
-.v2 .v2-footer__lang span {
-  opacity: 0.4;
+.v2 .v2-footer__logo img {
+  height: clamp(58px, 8.5vw, 124px);
+  width: auto;
+  transition: transform 0.25s ease;
+}
+.v2 .v2-footer__logo:hover img {
+  transform: rotate(-2deg) scale(1.03);
+}
+
+/* middle block: "schuif aan" sign over the info columns */
+.v2 .v2-footer__mid {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vh, 24px);
+}
+.v2 .v2-footer__schuif {
+  height: clamp(30px, 4.2vw, 60px);
+  width: auto;
+  align-self: flex-start;
+  transform: rotate(-4deg);
+  margin-left: clamp(4px, 1vw, 18px);
 }
 .v2 .v2-footer__cols {
-  display: grid;
-  grid-template-columns: repeat(3, auto) 1fr;
-  gap: clamp(16px, 2.4vw, 34px);
-  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 52px);
 }
 .v2 .v2-footer__col {
   display: flex;
@@ -1291,38 +1459,121 @@
 .v2 .v2-footer__col p {
   margin: 0;
 }
+.v2 .v2-footer__col a {
+  color: var(--woody-cream);
+  transition: color 0.18s ease;
+}
 .v2 .v2-footer__col a:hover {
   color: var(--woody-yellow);
 }
 .v2 .v2-footer__label {
   font-family: var(--font-woody-cond), sans-serif;
-  text-transform: none;
   letter-spacing: 0.02em;
   font-size: 15px;
-  opacity: 0.7;
+  color: var(--woody-yellow);
   margin-bottom: 8px;
 }
-.v2 .v2-footer__socials {
+
+/* right block: language toggle above the two emblem-socials */
+.v2 .v2-footer__right {
+  flex: none;
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(12px, 1.8vh, 22px);
+}
+.v2 .v2-footer__lang {
+  display: flex;
   align-items: center;
-  justify-self: end;
+  gap: 8px;
+  font-family: var(--font-woody-display), cursive;
 }
-.v2 .v2-footer__socials a {
+.v2 .v2-footer__lang button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   color: var(--woody-cream);
-  transition: color 0.2s ease;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 20px;
+  opacity: 0.55;
+  transition: opacity 0.18s ease, color 0.18s ease;
 }
-.v2 .v2-footer__socials a:hover {
+.v2 .v2-footer__lang button.is-on {
+  opacity: 1;
   color: var(--woody-yellow);
 }
+.v2 .v2-footer__lang span {
+  opacity: 0.4;
+}
 
-@media (max-width: 780px) {
-  .v2 .v2-footer__cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+/* socials rendered as the woodpecker emblem ("big W") + platform badge */
+.v2 .v2-footer__socials {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: center;
+}
+.v2 .v2-footer__social {
+  position: relative;
+  display: block;
+  width: clamp(54px, 6vw, 88px);
+  line-height: 0;
+}
+.v2 .v2-footer__social-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.22s ease;
+}
+.v2 .v2-footer__social:hover .v2-footer__social-mark {
+  transform: rotate(-7deg) scale(1.06);
+}
+.v2 .v2-footer__social-badge {
+  position: absolute;
+  right: -4%;
+  bottom: -4%;
+  width: 46%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: var(--woody-yellow);
+  color: var(--woody-red);
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+}
+.v2 .v2-footer__social-badge svg {
+  width: 62%;
+  height: 62%;
+}
+
+/* ---- footer responsive: stack into a centred column, drop the button reserve */
+@media (max-width: 860px) {
+  .v2 .v2-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: clamp(24px, 4vh, 40px);
+    padding: clamp(40px, 7vh, 72px) clamp(20px, 6vw, 48px) clamp(150px, 26vh, 220px);
   }
-  .v2 .v2-footer__socials {
-    grid-column: 1 / -1;
+  .v2 .v2-footer__mid {
+    align-items: center;
+    width: 100%;
+  }
+  .v2 .v2-footer__schuif {
+    align-self: center;
+    margin-left: 0;
+  }
+  .v2 .v2-footer__cols {
+    justify-content: center;
+    gap: clamp(22px, 7vw, 44px);
+  }
+  .v2 .v2-footer__col {
+    align-items: center;
+  }
+  .v2 .v2-footer__right {
+    align-items: center;
   }
 }
 
@@ -1352,14 +1603,6 @@
 /* Groepen keeps the big top gap even without a text title */
 .v2 .v2-ed--groepen .v2-ed__title-img {
   margin-bottom: clamp(34px, 7vh, 78px);
-}
-
-/* beeldmerk in the footer */
-.v2 .v2-footer__mark {
-  display: block;
-  width: clamp(52px, 6vw, 92px);
-  height: auto;
-  margin-bottom: clamp(20px, 3vh, 34px);
 }
 
 /* -------- designed words on the home content + closing (replace the H2 text) */

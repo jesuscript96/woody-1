@@ -1,3 +1,4 @@
+import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
 import "./theme-woody.css";
@@ -42,6 +43,13 @@ export default function RootLayout({ children }) {
         className={`theme-woody v2 ${exposureDisplay.variable} ${exposureBody.variable} ${exposureCond.variable}`}
       >
         {children}
+
+        {/* Guestplan reservation widget — powers every "reserveren" button:
+            any link whose href contains "#gstpln_openBookingWidget" opens the
+            booking popup (Guestplan binds via a document-level click listener). */}
+        <Script id="guestplan-widget" strategy="afterInteractive">
+          {`(function(g,s,t,p,l,n){g["_gstpln"]={};(l=s.createElement(t)),(n=s.getElementsByTagName(t)[0]);l.async=1;l.src=p;n.parentNode.insertBefore(l,n);})(window,document,"script","https://cdn.guestplan.com/widget.js");_gstpln.accessKey = "c4c9101e3851bd94b68288c6e9f962cce67c1114";`}
+        </Script>
       </body>
     </html>
   );

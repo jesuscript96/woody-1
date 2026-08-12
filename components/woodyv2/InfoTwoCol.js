@@ -26,7 +26,7 @@ export default function InfoTwoCol() {
           </p>
 
           <p className="v2-info__actions">
-            <a className="v2-info__cta" href="/reserveren">
+            <a className="v2-info__cta" href="#gstpln_openBookingWidget">
               Reserveren
             </a>
           </p>
