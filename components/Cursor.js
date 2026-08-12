@@ -46,8 +46,14 @@ export default function Cursor({ variant }) {
     // Grow over photos.
     const PHOTO =
       "img, .photo, .hero__tile, .v2-ed__tile, .agenda__preview, [data-cursor='photo']";
+    // Grow + go transparent over anything clickable (links, buttons, burger, menu items).
+    const CLICKABLE =
+      "a, button, [role='button'], .v2-nav__burger, .v2-book, .v2-overlay a, .v2-overlay button, input[type='submit'], [data-cursor='click']";
     const onOver = (e) => {
-      el.classList.toggle("is-photo", Boolean(e.target.closest(PHOTO)));
+      const clickEl = e.target.closest(CLICKABLE);
+      const photoEl = e.target.closest(PHOTO);
+      el.classList.toggle("is-click", Boolean(clickEl));
+      el.classList.toggle("is-photo", !clickEl && Boolean(photoEl));
     };
 
     const tick = () => {

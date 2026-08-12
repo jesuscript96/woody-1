@@ -7,12 +7,17 @@ import { v2NavLinks, v2Brand, v2Book, v2Footer } from "@/lib/woody-v2-content";
 // full-screen burgundy overlay with big Exposure links + the shared footer.
 // `solid`   = pages without a dark hero (cream bar from the start).
 // `overlay` = pages with a full-bleed photo hero (transparent bar, cream marks).
-export default function V2Nav({ solid = false, overlay = false }) {
+// `light`   = cream-bg page, no dark hero: transparent bar, burgundy marks.
+export default function V2Nav({ solid = false, overlay = false, light = false }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      setPastHero(window.scrollY > (window.innerHeight - 100));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -29,9 +34,13 @@ export default function V2Nav({ solid = false, overlay = false }) {
     };
   }, [open]);
 
+  // Determine if header elements should render burgundy (over cream) or beige (over dark)
+  const isLightContext = light || (overlay && pastHero) || (!overlay && !open);
+  
   const barClass = [
     "v2-nav",
-    overlay ? "v2-nav--overlay" : (scrolled || solid) && "v2-nav--solid",
+    isLightContext ? "v2-nav--light" : "v2-nav--dark",
+    scrolled && "v2-nav--scrolled",
     open && "v2-nav--open",
   ]
     .filter(Boolean)
@@ -67,14 +76,20 @@ export default function V2Nav({ solid = false, overlay = false }) {
       <div className={`v2-overlay${open ? " is-open" : ""}`} aria-hidden={!open}>
         {/* eslint-disable @next/next/no-img-element */}
 
-        {/* top-left woodpecker emblem (the "bar woody" wordmark sits centred in
-            the bar above; the X lives top-right) */}
-        <img
-          className="v2-overlay__brandmark"
-          src="/gfx/beeldmerk1-beige.svg"
-          alt=""
-          aria-hidden="true"
-        />
+        {/* Instagram icon top-left, aligned with the menu items below */}
+        <a
+          className="v2-overlay__ig"
+          href="https://www.instagram.com/barwoody"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Instagram"
+        >
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+            <circle cx="12" cy="12" r="4.4" />
+            <circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
 
         {/* small teal club-suit accent */}
         <span className="v2-overlay__club" aria-hidden="true" />

@@ -8,12 +8,12 @@
 .theme-woody {
   /* woody palette */
   --woody-red: #6d150f;
-  --woody-cream: #f2f4da;
+  --woody-cream: #f3f5db;
   --woody-yellow: #f2c00d;
   --woody-teal: #8fd9c7; /* mint/teal accent (menu club-suit) */
 
   /* remap the page-1 tokens → woody */
-  --cream: #f2f4da;
+  --cream: #f3f5db;
   --ink: #6d150f;
   --red: #f2c00d; /* accent */
   --orange: #6d150f;
@@ -140,12 +140,13 @@
 }
 /* Caption sits directly below the back photo; JS sets top dynamically */
 .theme-woody .triplet__caption {
-  background: var(--woody-red);
+  background: transparent;
+  padding: 0;
   color: var(--woody-cream);
   text-align: left;
   font-size: 22px;
   max-width: 420px;
-  z-index: 0;
+  z-index: 4;
   bottom: auto;
   transform: none;
 }

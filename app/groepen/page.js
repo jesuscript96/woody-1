@@ -14,7 +14,7 @@ export default function GroepenPage() {
   return (
     <main>
       <Cursor variant="woody" />
-      <V2Nav solid />
+      <V2Nav light />
       <V2BookButton />
       <EditorialPage data={woodyV2Pages.groepen} />
       <V2Footer />

@@ -16,7 +16,9 @@
   align-items: center;
   justify-content: space-between; /* logo (left) · burger (right) */
   padding: 22px clamp(18px, 3vw, 40px);
-  transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: padding 0.3s ease;
 }
 
 /* INSTAGRAM — left */
@@ -27,24 +29,22 @@
   letter-spacing: 0.14em;
   font-size: 14px;
   color: var(--woody-cream);
+  transition: color 0.25s ease;
 }
-.v2 .v2-nav--solid .v2-nav__ig {
+.v2 .v2-nav--light .v2-nav__ig {
   color: var(--woody-red);
 }
 .v2 .v2-nav__ig:hover {
   color: var(--woody-yellow);
 }
-/* condensed / solid bar (on scroll, or on pages without a dark hero) */
-.v2 .v2-nav--solid {
-  background: var(--woody-cream);
-  padding-top: 13px;
-  padding-bottom: 13px;
-  box-shadow: 0 6px 24px rgba(109, 21, 15, 0.14);
+
+.v2 .v2-nav--scrolled {
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
-/* logo — designed wordmark, pinned top-middle. Two colourways are stacked: the
-   context (hero/overlay = beige, cream bar = burgundy) picks the base, and
-   hovering flips to the other colour. */
+/* logo — designed wordmark, pinned top-middle. Two colourways are stacked:
+   context (dark = beige, light = burgundy) picks the base, and hover flips it. */
 .v2 .v2-nav__logo {
   position: absolute;
   left: 50%;
@@ -54,7 +54,7 @@
   line-height: 0;
   height: clamp(32px, 3.6vw, 50px);
 }
-.v2 .v2-nav--solid .v2-nav__logo {
+.v2 .v2-nav--scrolled .v2-nav__logo {
   height: clamp(27px, 3vw, 40px);
 }
 .v2 .v2-nav__logo-img {
@@ -67,26 +67,34 @@
   position: absolute;
   inset: 0;
 }
-/* base colour by context: beige over hero/overlay/open, burgundy on cream bar */
+
+/* Default dark context: beige logo, cream burger */
 .v2 .v2-nav__logo .is-rood {
   opacity: 0;
 }
 .v2 .v2-nav__logo .is-beige {
   opacity: 1;
 }
-.v2 .v2-nav--solid .v2-nav__logo .is-rood {
+
+/* Light context (over cream bg): burgundy logo, red burger */
+.v2 .v2-nav--light .v2-nav__logo .is-rood {
   opacity: 1;
 }
-.v2 .v2-nav--solid .v2-nav__logo .is-beige {
+.v2 .v2-nav--light .v2-nav__logo .is-beige {
   opacity: 0;
 }
-/* hover flips to the other colourway */
-.v2 .v2-nav:not(.v2-nav--solid) .v2-nav__logo:hover .is-beige,
-.v2 .v2-nav--solid .v2-nav__logo:hover .is-rood {
+
+/* Hover flips colourway */
+.v2 .v2-nav--light .v2-nav__logo:hover .is-rood {
   opacity: 0;
 }
-.v2 .v2-nav:not(.v2-nav--solid) .v2-nav__logo:hover .is-rood,
-.v2 .v2-nav--solid .v2-nav__logo:hover .is-beige {
+.v2 .v2-nav--light .v2-nav__logo:hover .is-beige {
+  opacity: 1;
+}
+.v2 .v2-nav--dark .v2-nav__logo:hover .is-beige {
+  opacity: 0;
+}
+.v2 .v2-nav--dark .v2-nav__logo:hover .is-rood {
   opacity: 1;
 }
 
@@ -111,7 +119,7 @@
   background: var(--woody-cream);
   transition: transform 0.25s ease, opacity 0.2s ease, background 0.3s ease;
 }
-.v2 .v2-nav--solid .v2-nav__burger span {
+.v2 .v2-nav--light .v2-nav__burger span {
   background: var(--woody-red);
 }
 .v2 .v2-nav__burger.is-open span:nth-child(1) {
@@ -218,17 +226,21 @@
   transform: none;
 }
 
-/* top-left woodpecker emblem */
-.v2 .v2-overlay__brandmark {
+/* top-left Instagram icon — aligned with the menu links column below */
+.v2 .v2-overlay__ig {
   position: absolute;
-  top: clamp(16px, 2.2vh, 30px);
-  left: clamp(20px, 3vw, 44px);
-  width: clamp(40px, 3.4vw, 54px);
-  height: auto;
+  top: clamp(22px, 3.5vh, 40px);
+  left: clamp(30px, 6vw, 110px);
+  color: var(--woody-cream);
+  line-height: 0;
+  z-index: 10;
   opacity: 0;
-  transition: opacity 0.4s ease 0.15s;
+  transition: opacity 0.4s ease 0.15s, color 0.2s ease;
 }
-.v2 .v2-overlay.is-open .v2-overlay__brandmark {
+.v2 .v2-overlay__ig:hover {
+  color: var(--woody-yellow);
+}
+.v2 .v2-overlay.is-open .v2-overlay__ig {
   opacity: 1;
 }
 
@@ -249,11 +261,11 @@
   opacity: 1;
 }
 
-/* nav links — left column, vertically centred */
+/* nav links — left column, positioned slightly higher to leave breathing room for footer */
 .v2 .v2-overlay__links {
   position: absolute;
   left: clamp(30px, 6vw, 110px);
-  top: 50%;
+  top: 44%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
@@ -263,8 +275,9 @@
   width: fit-content;
   font-family: var(--font-woody-display), cursive;
   font-size: clamp(1.5rem, 4vw, 3.1rem);
-  line-height: 1.12; /* room for the puffy descenders/ascenders */
-  padding: 0.02em 0;
+  line-height: 1.15; /* room for the puffy descenders/ascenders */
+  padding: 0.05em 0.14em;
+  overflow: visible;
   text-transform: lowercase;
   text-decoration: none; /* kill the stray underline on hover */
   color: var(--woody-cream);
@@ -277,7 +290,7 @@
   transform: none;
 }
 .v2 .v2-overlay__links a:hover {
-  color: var(--woody-yellow);
+  color: var(--woody-yellow) !important;
 }
 
 /* -------------------------------------------- flikkering "reserveren" sign */
@@ -553,6 +566,12 @@
 @media (prefers-reduced-motion: reduce) {
   .v2 .hero__spin {
     animation: none;
+  }
+}
+@media (max-width: 768px) {
+  .v2 .hero__spin {
+    width: clamp(160px, 45vw, 220px);
+    top: 40%;
   }
 }
 
@@ -1309,7 +1328,8 @@
   margin: 0 0 clamp(24px, 4vh, 44px);
   font-family: var(--font-woody-display), cursive;
   font-size: clamp(2rem, 5vw, 3.6rem);
-  line-height: 1.05;
+  line-height: 1.1;
+  padding-left: 0.08em;
   text-transform: lowercase;
   opacity: 0.85;
 }
@@ -1344,7 +1364,7 @@
 .v2 .ev-more__body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 .v2 .ev-more__tag {
   align-self: start;
@@ -1360,13 +1380,14 @@
 .v2 .ev-more__name {
   font-family: var(--font-woody-display), cursive;
   font-size: clamp(1.6rem, 3.6vw, 3rem);
-  line-height: 0.95;
+  line-height: 1.05;
   text-transform: lowercase;
 }
 .v2 .ev-more__sub {
   font-family: var(--font-woody-serif), Georgia, serif;
   font-size: 15px;
   opacity: 0.8;
+  margin-top: 4px;
 }
 .v2 .ev-more__cta {
   display: inline-block;
@@ -1555,7 +1576,7 @@
     align-items: center;
     text-align: center;
     gap: clamp(24px, 4vh, 40px);
-    padding: clamp(40px, 7vh, 72px) clamp(20px, 6vw, 48px) clamp(150px, 26vh, 220px);
+    padding: clamp(40px, 6vh, 64px) clamp(20px, 6vw, 48px) clamp(40px, 6vh, 70px);
   }
   .v2 .v2-footer__mid {
     align-items: center;
