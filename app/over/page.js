@@ -14,7 +14,7 @@ export default function OverPage() {
   return (
     <main>
       <Cursor variant="woody" />
-      <V2Nav overlay />
+      <V2Nav solid />
       <V2BookButton />
       <EditorialPage data={woodyV2Pages.over} />
       <V2Footer />

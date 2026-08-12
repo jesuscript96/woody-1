@@ -2,7 +2,7 @@
    Sticky nav-menu (hamburger → full-screen overlay) + floating circular book
    button + two-column info page. Everything scoped under .v2 / .v2-* so it
    never touches the other landings. Uses the woody tokens set by .theme-woody
-   (bordeaux #6d150f · crème #f1f0cd · mosterd #f2c00d + Exposure).
+   (bordeaux #6d150f · crème #f2f4da · mosterd #f2c00d + Exposure).
    ============================================================ */
 
 /* ------------------------------------------------------------ sticky nav */
@@ -133,6 +133,14 @@
 .v2 .v2-nav--open .v2-nav__logo,
 .v2 .v2-nav--open .v2-nav__ig {
   color: var(--woody-cream);
+}
+/* when the overlay opens on a --solid page, flip the logo images back to beige
+   so the wordmark stays visible on the burgundy overlay. */
+.v2 .v2-nav--open .v2-nav__logo .is-rood {
+  opacity: 0;
+}
+.v2 .v2-nav--open .v2-nav__logo .is-beige {
+  opacity: 1;
 }
 .v2 .v2-nav--open .v2-nav__burger span {
   background: var(--woody-cream);

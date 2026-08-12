@@ -14,7 +14,7 @@ export default function ReserverenPage() {
   return (
     <main>
       <Cursor variant="woody" />
-      <V2Nav overlay />
+      <V2Nav solid />
       <V2BookButton />
       <Reserveren />
       <V2Footer />

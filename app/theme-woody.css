@@ -8,11 +8,11 @@
 .theme-woody {
   /* woody palette */
   --woody-red: #6d150f;
-  --woody-cream: #f1f0cd;
+  --woody-cream: #f2f4da;
   --woody-yellow: #f2c00d;
 
   /* remap the page-1 tokens → woody */
-  --cream: #f1f0cd;
+  --cream: #f2f4da;
   --ink: #6d150f;
   --red: #f2c00d; /* accent */
   --orange: #6d150f;

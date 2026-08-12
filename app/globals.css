@@ -221,11 +221,11 @@ body.has-woo-cursor * {
   font-weight: 400;
   letter-spacing: 0.04em;
   font-size: clamp(2rem, 5vw, 3.5rem);
-  color: var(--woody-cream, #f1f0cd);
+  color: var(--woody-cream, #f2f4da);
   text-transform: uppercase;
 }
 .hero__menu a {
-  color: var(--woody-cream, #f1f0cd);
+  color: var(--woody-cream, #f2f4da);
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -652,7 +652,7 @@ body.has-woo-cursor * {
   transition: color 0.25s linear, border-color 0.25s linear;
 }
 .closing__footer {
-  background: var(--woody-cream, #f1f0cd);
+  background: var(--woody-cream, #f2f4da);
   padding: 18px 34px;
   display: flex;
   justify-content: space-between;
