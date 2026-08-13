@@ -419,15 +419,21 @@
   .v2 .v2-overlay {
     overflow-y: auto;
   }
-  .v2 .v2-overlay__brandmark,
   .v2 .v2-overlay__club,
   .v2 .v2-overlay__collage {
     display: none;
   }
+  /* Instagram icon at the top of the mobile overlay */
+  .v2 .v2-overlay__ig {
+    position: static;
+    display: block;
+    margin: 0;
+    padding: clamp(24px, 4vh, 40px) 0 0 clamp(24px, 8vw, 60px);
+  }
   .v2 .v2-overlay__links {
     position: static;
     transform: none;
-    padding: clamp(92px, 16vh, 150px) clamp(24px, 8vw, 60px) 0;
+    padding: clamp(28px, 5vh, 48px) clamp(24px, 8vw, 60px) 0;
     gap: 8px;
   }
   .v2 .v2-overlay__links a {
