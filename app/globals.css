@@ -92,7 +92,12 @@ img {
 .woo-cursor__ic.is-shown {
   opacity: 1;
 }
-/* grow over photos */
+/* contrast + grow over clickable things (blend-difference already inverts it
+   against the background; the scale makes the "clickable" state read clearly) */
+.woo-cursor.is-link .woo-cursor__ic.is-shown {
+  transform: translate(-50%, -50%) scale(1.55);
+}
+/* grow over photos (wins over is-link on linked images — declared after) */
 .woo-cursor.is-photo .woo-cursor__ic.is-shown {
   transform: translate(-50%, -50%) scale(2);
 }

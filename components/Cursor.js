@@ -46,8 +46,13 @@ export default function Cursor({ variant }) {
     // Grow over photos.
     const PHOTO =
       "img, .photo, .hero__tile, .v2-ed__tile, .agenda__preview, [data-cursor='photo']";
+    // Contrast + grow over anything clickable (consistent across the whole site).
+    const CLICKABLE =
+      "a[href], button, [role='button'], input:not([type='hidden']), textarea, select, label[for], summary, [data-cursor='link']";
     const onOver = (e) => {
-      el.classList.toggle("is-photo", Boolean(e.target.closest(PHOTO)));
+      const t = e.target;
+      el.classList.toggle("is-photo", Boolean(t.closest(PHOTO)));
+      el.classList.toggle("is-link", Boolean(t.closest(CLICKABLE)));
     };
 
     const tick = () => {

@@ -67,26 +67,24 @@
   position: absolute;
   inset: 0;
 }
-/* base colour by context: beige over hero/overlay/open, burgundy on cream bar */
+/* logo colourway driven by the contrast sampler (data-logo on the header):
+   "rood" (dark) over light backgrounds, "beige" (light) over dark ones. */
 .v2 .v2-nav__logo .is-rood {
   opacity: 0;
 }
 .v2 .v2-nav__logo .is-beige {
   opacity: 1;
 }
-.v2 .v2-nav--solid .v2-nav__logo .is-rood {
+.v2 .v2-nav[data-logo="rood"] .v2-nav__logo .is-rood {
   opacity: 1;
 }
-.v2 .v2-nav--solid .v2-nav__logo .is-beige {
+.v2 .v2-nav[data-logo="rood"] .v2-nav__logo .is-beige {
   opacity: 0;
 }
-/* hover flips to the other colourway */
-.v2 .v2-nav:not(.v2-nav--solid) .v2-nav__logo:hover .is-beige,
-.v2 .v2-nav--solid .v2-nav__logo:hover .is-rood {
+.v2 .v2-nav[data-logo="beige"] .v2-nav__logo .is-rood {
   opacity: 0;
 }
-.v2 .v2-nav:not(.v2-nav--solid) .v2-nav__logo:hover .is-rood,
-.v2 .v2-nav--solid .v2-nav__logo:hover .is-beige {
+.v2 .v2-nav[data-logo="beige"] .v2-nav__logo .is-beige {
   opacity: 1;
 }
 
@@ -113,6 +111,14 @@
 }
 .v2 .v2-nav--solid .v2-nav__burger span {
   background: var(--woody-red);
+}
+/* hamburger colour driven by the contrast sampler (data-burger on the header),
+   independent from the logo so a top-right photo can flip just the burger. */
+.v2 .v2-nav[data-burger="red"] .v2-nav__burger span {
+  background: var(--woody-red);
+}
+.v2 .v2-nav[data-burger="cream"] .v2-nav__burger span {
+  background: var(--woody-cream);
 }
 .v2 .v2-nav__burger.is-open span:nth-child(1) {
   transform: translateY(12px) rotate(45deg);
@@ -260,9 +266,13 @@
   text-transform: lowercase;
   text-decoration: none; /* kill the stray underline on hover */
   color: var(--woody-cream);
+  /* Safari: sync the fill to `color` so the whole puffy word recolours on hover.
+     NB: no transform/backface layer promotion here — that clips the font ink. */
+  -webkit-text-fill-color: currentColor;
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.4s ease, transform 0.4s ease, color 0.18s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.18s ease,
+    -webkit-text-fill-color 0.18s ease;
 }
 .v2 .v2-overlay.is-open .v2-overlay__links a {
   opacity: 1;

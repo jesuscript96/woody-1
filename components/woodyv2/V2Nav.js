@@ -1,15 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { v2NavLinks, v2Brand, v2Book, v2Footer } from "@/lib/woody-v2-content";
+import { useState, useEffect, useRef } from "react";
+import { v2NavLinks, v2Brand, v2Footer } from "@/lib/woody-v2-content";
 
 // Sticky nav-menu: fixed logo (left) + hamburger (right); the hamburger opens a
 // full-screen burgundy overlay with big Exposure links + the shared footer.
 // `solid`   = pages without a dark hero (cream bar from the start).
 // `overlay` = pages with a full-bleed photo hero (transparent bar, cream marks).
+// The logo + hamburger colours are chosen per SECTION by a contrast sampler that
+// reads the background behind each mark independently.
 export default function V2Nav({ solid = false, overlay = false }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // mark colours refined by the sampler after mount (SSR default from the prop)
+  const [logoMark, setLogoMark] = useState(overlay ? "beige" : "rood");
+  const [burgerMark, setBurgerMark] = useState(overlay ? "cream" : "red");
+
+  const logoRef = useRef(null);
+  const burgerRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -17,6 +25,66 @@ export default function V2Nav({ solid = false, overlay = false }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Section-level contrast: sample what sits behind the logo and behind the
+  // hamburger separately, and pick the mark colour that contrasts. A photo (or
+  // any dark fill) → light mark; a light fill → dark mark. This is why a page
+  // with a light body but a photo top-right gets a dark logo + a light burger.
+  useEffect(() => {
+    const logo = logoRef.current;
+    const burger = burgerRef.current;
+    if (!logo || !burger) return;
+
+    const themeAt = (x, y) => {
+      const stack = document.elementsFromPoint(x, y);
+      for (const el of stack) {
+        if (el.closest(".v2-nav") || el.classList.contains("woo-cursor")) continue;
+        let node = el;
+        while (node && node.nodeType === 1 && node !== document.documentElement) {
+          if (node.tagName === "IMG" || node.tagName === "VIDEO") return "dark";
+          const cs = getComputedStyle(node);
+          if (cs.backgroundImage && cs.backgroundImage !== "none") return "dark";
+          const m = cs.backgroundColor.match(/rgba?\(([^)]+)\)/);
+          if (m) {
+            const p = m[1].split(",").map((n) => parseFloat(n));
+            const a = p[3] === undefined ? 1 : p[3];
+            if (a >= 0.5) {
+              const lum = (0.299 * p[0] + 0.587 * p[1] + 0.114 * p[2]) / 255;
+              return lum > 0.55 ? "light" : "dark";
+            }
+          }
+          node = node.parentElement;
+        }
+        break;
+      }
+      return overlay ? "dark" : "light";
+    };
+
+    let raf = 0;
+    const sample = () => {
+      raf = 0;
+      const lr = logo.getBoundingClientRect();
+      const br = burger.getBoundingClientRect();
+      if (!window.innerWidth || !lr.width || !br.width) return; // degenerate layout
+      setLogoMark(
+        themeAt(lr.left + lr.width / 2, lr.top + lr.height / 2) === "light" ? "rood" : "beige"
+      );
+      setBurgerMark(
+        themeAt(br.left + br.width / 2, br.top + br.height / 2) === "light" ? "red" : "cream"
+      );
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(sample);
+    };
+    sample();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [overlay]);
 
   useEffect(() => {
     if (!open) return;
@@ -39,8 +107,13 @@ export default function V2Nav({ solid = false, overlay = false }) {
 
   return (
     <>
-      <header className={barClass}>
+      <header
+        className={barClass}
+        data-logo={open ? "beige" : logoMark}
+        data-burger={open ? "cream" : burgerMark}
+      >
         <a
+          ref={logoRef}
           className="v2-nav__logo"
           href="/"
           aria-label={v2Brand}
@@ -53,6 +126,7 @@ export default function V2Nav({ solid = false, overlay = false }) {
           {/* eslint-enable @next/next/no-img-element */}
         </a>
         <button
+          ref={burgerRef}
           className={`v2-nav__burger${open ? " is-open" : ""}`}
           aria-label={open ? "Sluit menu" : "Open menu"}
           aria-expanded={open}
@@ -92,12 +166,12 @@ export default function V2Nav({ solid = false, overlay = false }) {
           ))}
         </nav>
 
-        {/* flikkering "reserveren" sign */}
+        {/* flikkering "reserveren" sign → the reserveren page (not the widget) */}
         <a
           className="v2-flikker"
-          href={v2Book.href}
+          href="/reserveren"
           onClick={() => setOpen(false)}
-          aria-label={v2Book.label}
+          aria-label="Reserveren"
         >
           <img
             className="v2-flikker__word"
